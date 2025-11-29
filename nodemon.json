@@ -1,0 +1,55 @@
+{
+  "watch": [
+    "index.js",
+    "handler.js",
+    "plugins",
+    "lib",
+    "config.js"
+  ],
+
+  "ext": "js,json,ts",
+
+  "ignore": [
+    "session/*",
+    "node_modules/*",
+    "temp/*",
+    "logs/*",
+    "storage/cache/*",
+    "*.log",
+    "*.sqlite",
+    "*.db",
+    ".git/*",
+    ".vscode/*",
+    "public/*"
+  ],
+
+  "delay": "250ms",
+
+  "exec": "node --trace-warnings --max-old-space-size=4096 index.js",
+
+  "execMap": {
+    "js": "node",
+    "ts": "ts-node"
+  },
+
+  "events": {
+    "restart": "echo 🔄 Restarting bot at $(date '+%H:%M:%S')...",
+    "crash": "echo ❌ Bot crash detected! Waiting for file changes...",
+    "start": "echo ✔ Bot running...",
+    "quit": "echo 🔚 Nodemon stopped."
+  },
+
+  "env": {
+    "NODE_ENV": "development",
+    "TZ": "Asia/Jakarta",
+    "FORCE_COLOR": "true"
+  },
+
+  "verbose": false,
+
+  "restartable": "rs",
+
+  "signal": "SIGINT",
+
+  "legacyWatch": false
+}
