@@ -1,32 +1,35 @@
-# Pakai Alpine Linux (Versi paling ringan, cuma 50MB-an)
-FROM node:18-alpine
+FROM node:18-buster-slim
 
-WORKDIR /app
-
-# Install dependencies sistem (ffmpeg, dll) pakai APK (lebih cepat dari APT)
-RUN apk add --no-cache \
+# Install dependencies sistem yang dibutuhkan (FFMPEG, GIT, Python untuk build)
+RUN apt-get update && \
+    apt-get install -y \
     ffmpeg \
     imagemagick \
     webp \
     git \
-    python3 \
     make \
-    g++
+    g++ \
+    python3 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy package.json
+WORKDIR /app
+
+# Copy file package.json
 COPY package.json .
 
-# Hapus node_modules kalau ada (biar bersih)
-RUN rm -rf node_modules
+# Hapus lockfile jika masih ada (tindakan pencegahan)
+RUN rm -f package-lock.json
 
-# Install dependencies bot (hanya production biar hemat memori)
-RUN npm install --production
+# Install dependencies dengan flag --production dan --ignore-scripts
+# Ini kuncinya! "--ignore-scripts" mencegah error saat install module berat
+RUN npm install --production --ignore-scripts --legacy-peer-deps
 
-# Copy sisa file
+# Copy seluruh file bot
 COPY . .
 
-# Ekspos port 8000
+# Ekspos port
 EXPOSE 8000
 
-# Jalankan
+# Jalankan bot
 CMD ["node", "index.js"]
