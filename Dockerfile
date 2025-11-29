@@ -1,35 +1,35 @@
-FROM node:18-buster-slim
-
-# Install dependencies sistem yang dibutuhkan (FFMPEG, GIT, Python untuk build)
-RUN apt-get update && \
-    apt-get install -y \
-    ffmpeg \
-    imagemagick \
-    webp \
-    git \
-    make \
-    g++ \
-    python3 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Gunakan base image yang stabil tapi ringan
+FROM node:18-bullseye-slim
 
 WORKDIR /app
 
-# Copy file package.json
+# Install HANYA yang wajib (ffmpeg & webp)
+# Kita hapus build-tools (python/make) biar hemat space, 
+# karena kita akan skip proses compile di bawah.
+RUN apt-get update && \
+    apt-get install -y \
+    ffmpeg \
+    webp \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy package.json
 COPY package.json .
 
-# Hapus lockfile jika masih ada (tindakan pencegahan)
+# Hapus package-lock.json (PENTING)
 RUN rm -f package-lock.json
 
-# Install dependencies dengan flag --production dan --ignore-scripts
-# Ini kuncinya! "--ignore-scripts" mencegah error saat install module berat
-RUN npm install --production --ignore-scripts --legacy-peer-deps
+# --- BAGIAN SAKTI ---
+# --omit=dev: Gak usah install devDependencies
+# --ignore-scripts: JANGAN jalankan script aneh-aneh (cegah error node-gyp)
+# --no-bin-links: Cegah error symlink di beberapa sistem
+RUN npm install --omit=dev --ignore-scripts --no-bin-links
 
-# Copy seluruh file bot
+# Copy sisa file
 COPY . .
 
-# Ekspos port
+# Port
 EXPOSE 8000
 
-# Jalankan bot
+# Jalankan
 CMD ["node", "index.js"]
