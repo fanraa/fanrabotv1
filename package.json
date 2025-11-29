@@ -21,7 +21,6 @@
     "boxen": "^5.1.2",
     "chalk": "^4.1.2",
     "express": "^5.1.0",
-    "gradient-string": "^3.0.0",
     "inquirer": "^8.2.5",
     "ora": "^5.4.1",
     "pino": "^10.1.0",
