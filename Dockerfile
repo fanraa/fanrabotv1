@@ -1,32 +1,32 @@
-FROM node:18-bullseye-slim
+# Pakai Alpine Linux (Versi paling ringan, cuma 50MB-an)
+FROM node:18-alpine
 
-# Gunakan "--no-install-recommends" agar tidak menginstall sampah (driver grafik, dll)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+WORKDIR /app
+
+# Install dependencies sistem (ffmpeg, dll) pakai APK (lebih cepat dari APT)
+RUN apk add --no-cache \
     ffmpeg \
     imagemagick \
     webp \
     git \
-    ca-certificates && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
+    python3 \
+    make \
+    g++
 
 # Copy package.json
 COPY package.json .
 
-# Hapus package-lock.json jika ada (agar tidak bentrok versi Windows vs Linux)
-RUN rm -f package-lock.json
+# Hapus node_modules kalau ada (biar bersih)
+RUN rm -rf node_modules
 
-# Install dependencies bot
-RUN npm install
+# Install dependencies bot (hanya production biar hemat memori)
+RUN npm install --production
 
 # Copy sisa file
 COPY . .
 
-# Ekspos port
+# Ekspos port 8000
 EXPOSE 8000
 
-# Start
-CMD ["npm", "start"]
+# Jalankan
+CMD ["node", "index.js"]
