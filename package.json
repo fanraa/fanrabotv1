@@ -1,30 +1,10 @@
-{
-  "name": "fanrabot",
-  "version": "1.1.0",
-  "description": "FANRA BOT — Modular WhatsApp bot with premium & ticket system",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon",
-    "lint": "echo \"No linter configured\""
-  },
-  "keywords": [
-    "whatsapp",
-    "baileys",
-    "bot",
-    "fanra"
-  ],
-  "author": "fanraa",
-  "license": "MIT",
-  "dependencies": {
-    "@whiskeysockets/baileys": "^7.0.0-rc.9",
-    "boxen": "^5.1.2",
+"dependencies": {
+    "@whiskeysockets/baileys": "^6.6.0",  <-- Pastikan ada (versi bebas)
     "chalk": "^4.1.2",
-    "express": "^5.1.0",
-    "inquirer": "^8.2.5",
-    "ora": "^5.4.1",
-    "pino": "^10.1.0",
-    "pino-pretty": "^13.1.2",
-    "qrcode-terminal": "^0.12.0"
+    "express": "^4.18.2",
+    "pino": "^8.0.0",
+    "qrcode-terminal": "^0.12.0",
+    
+    
+    "fluent-ffmpeg": "^2.1.2"     <-- Boleh ada
   }
-}
