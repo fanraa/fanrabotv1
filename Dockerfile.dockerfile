@@ -1,23 +1,28 @@
-FROM node:18-buster
+FROM node:18-bullseye-slim
 
-# Install dependencies sistem (opsional, untuk ffmpeg/sharp)
+# Install dependencies sistem
 RUN apt-get update && \
     apt-get install -y \
     ffmpeg \
     imagemagick \
-    webp && \
+    webp \
+    git && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
+# Copy package.json dulu
 COPY package.json .
 
+# Install dependencies
 RUN npm install
 
+# Copy semua file
 COPY . .
 
-# Port yang diekspos (sesuai index.js)
-EXPOSE 8080
+# Ekspos port 8000
+EXPOSE 8000
 
-CMD ["node", "index.js"]
+# Start bot
+CMD ["npm", "start"]
